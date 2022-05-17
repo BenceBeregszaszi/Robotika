@@ -1,8 +1,8 @@
-
+#include <Wire.h>
 #include <Adafruit_BMP085.h>
+Adafruit_BMP085 bmp;
 #include <LiquidCrystal_I2C.h>
-
-#define sealevel 1013.25
+LiquidCrystal_I2C lcd(0x27,16,2);
 #define r 9
 #define g 7
 #define b 8
@@ -11,12 +11,15 @@
 #define rotary_sw 16
 #define lcd0 3
 #define lcd1 2
-#define barometerscl 3
-#define barometersda 2
+//#define barometerscl 3
+//#define barometersda 2
 #define speaker 4
 #define waterlsensor 20
-#define rht 18
 #define ldr 19
+#define dht_pin 18
+#define DHTTYPE DHT11
+#include <DHT.h>
+DHT dht(dht_pin, DHTTYPE);
 int i;
 int currentCLK;
 int lastCLK;
@@ -27,7 +30,12 @@ int btn_on;
 float bmp_temp;
 float bmp_pressure;
 float bmp_altitude;
-Adafruit_BMP085 bmp;
+float dht_value;
+float value;
+int ldr_light;
+int water_value;
+String message;
+String temp_string;
 
 
 void setup() {
@@ -40,12 +48,15 @@ pinMode(rotary_clk, INPUT);
 pinMode(rotary_sw, INPUT_PULLUP);
 pinMode(lcd0, OUTPUT);
 pinMode(lcd1, OUTPUT);
-pinMode(barometerscl, INPUT);
-pinMode(barometersda, INPUT);
+//pinMode(barometerscl, INPUT);
+//pinMode(barometersda, INPUT);
 pinMode(speaker, OUTPUT);
 pinMode(waterlsensor, INPUT);
-pinMode(rht, INPUT);
 pinMode(ldr, INPUT);
+lcd.init();
+lcd.init();
+lcd.backlight();
+dht.begin();
 lastCLK = digitalRead(rotary_clk);
 btn_on = 0;
 i = 1;
@@ -73,20 +84,61 @@ void loop() {
   if(btn_on == 1){
     switch(i){
     case 1:
+      dht_value = dht.readTemperature();
       bmp_temp = bmp.readTemperature();
+      value = (dht_value + dht_value)/2;
+      lcd.setCursor(1,0);
+      lcd.print("Hőmérséklet: ");
+      lcd.setCursor(3,1);
+      temp_string = String(value);
+      message = temp_string + " C*";
+      lcd.print(message);
       break;
     case 2:
       bmp_pressure = bmp.readPressure();
+      lcd.setCursor(1,0);
+      lcd.print("Légnyomás: ");
+      lcd.setCursor(3,1);
+      temp_string = String(bmp_pressure);
+      message = temp_string + " Bar";
+      lcd.print(message);
       break;
     case 3:
       bmp_altitude = bmp.readAltitude();
+      lcd.setCursor(1,0);
+      lcd.print("Magasság: ");
+      lcd.setCursor(3,1);
+      temp_string = String(bmp_altitude);
+      message = temp_string + " m";
+      lcd.print(message);
       break;
     case 4:
+      water_value = analogRead(waterlsensor);
+      lcd.setCursor(1,0);
+      lcd.print("Vizszint magasság: ");
+      lcd.setCursor(3,1);
+      temp_string = String(water_value);
+      message = temp_string + " ml";
+      lcd.print(message);
       break;
     case 5:
       ldr_light = analogRead(ldr);
+      lcd.setCursor(1,0);
+      lcd.print("Fény mennyisége: ");
+      lcd.setCursor(3,1);
+      temp_string = String(ldr_light);
+      message = temp_string + " lumen";
+      lcd.print(message);
       break;
     case 6:
+      delay(2000);
+      dht_value = dht.readHumidity();
+      lcd.setCursor(1,0);
+      lcd.print("Páratartalom: ");
+      lcd.setCursor(3,1);
+      temp_string = String(dht_value);
+      message = temp_string + " %";
+      lcd.print(message);
       break;
   }  
   } 
