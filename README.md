@@ -49,6 +49,10 @@ A megrendelőn egy olyan multifunkcionális eszközt szeretne amivel egyszerűen
    - Sárga: Ha a mérési eredmények kicsivel rosszabbak mint a megfelelőek akkor sárgán villog
    - Piros: Ha a mérési eredmények rosszak akkor piros fény villog
  
+## Terv
+
+![terv](https://imgur.com/DgFtSfQ.png)
+
 
 ## Fogalomszótár
 
