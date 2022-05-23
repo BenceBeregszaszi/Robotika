@@ -48,7 +48,12 @@ A megrendelőn egy olyan multifunkcionális eszközt szeretne amivel egyszerűen
    - Zöld: Ha a mérések megfelelőek akkor Zöld fény villog
    - Sárga: Ha a mérési eredmények kicsivel rosszabbak mint a megfelelőek akkor sárgán villog
    - Piros: Ha a mérési eredmények rosszak akkor piros fény villog
- 
+
+## Állapot átmenet gráf
+
+![allapotatmenet](https://imgur.com/jO8MS90.png)
+
+
 ## Terv
 
 ![terv](https://imgur.com/DgFtSfQ.png)
