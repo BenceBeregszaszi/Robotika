@@ -11,8 +11,8 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 #define rotary_sw 16
 #define lcd0 3
 #define lcd1 2
-//#define barometerscl 3
-//#define barometersda 2
+#define barometerscl 3
+#define barometersda 2
 #define speaker 4
 #define waterlsensor 20
 #define ldr 19
@@ -36,6 +36,22 @@ int ldr_light;
 int water_value;
 String message;
 String temp_string;
+int lastState;
+int buttonPress(){
+int state;
+int button = digitalRead(rotary_sw);
+if(button != lastState){
+if(button == HIGH){
+state = 1;
+}
+else{
+state = 0;
+}
+lastState = button;
+Serial.print(lastState);
+}
+}
+
 
 
 void setup() {
@@ -51,18 +67,21 @@ pinMode(lcd1, OUTPUT);
 //pinMode(barometerscl, INPUT);
 //pinMode(barometersda, INPUT);
 pinMode(speaker, OUTPUT);
-pinMode(waterlsensor, INPUT);
+//pinMode(waterlsensor, INPUT);
 pinMode(ldr, INPUT);
 lcd.init();
 lcd.init();
 lcd.backlight();
 dht.begin();
+bmp.begin();
 lastCLK = digitalRead(rotary_clk);
 btn_on = 0;
 i = 1;
+Serial.println("VOID SETUP IS READY");
 }
 
 void loop() {
+  Serial.println("LOOP");
   currentCLK = digitalRead(rotary_clk);
   if(currentCLK != lastCLK && currentCLK == 1){
     if(digitalRead(rotary_dt) != currentCLK){
@@ -71,31 +90,41 @@ void loop() {
     else {
       i ++;
     }
-    Serial.print(i);
+    Serial.println(i);
   }
   lastCLK = currentCLK;
+  /*
   btn_value = digitalRead(rotary_sw);
   if(btn_value == LOW && btn_on == 0){
     btn_on = 1;
+    Serial.print(btn_on);
   }
   if(btn_value == LOW && btn_on == 1){
     btn_on = 0;
+    Serial.print(btn_on);
   }
-  if(btn_on == 1){
+  */
+  buttonPress();
+  Serial.println("Button Press után");
+  if(lastState == 1){
     switch(i){
     case 1:
+      Serial.println("Switch 1");
       dht_value = dht.readTemperature();
-      bmp_temp = bmp.readTemperature();
+      Serial.println("bmp-k után");
       value = (dht_value + dht_value)/2;
       lcd.setCursor(1,0);
       lcd.print("Hőmérséklet: ");
       lcd.setCursor(3,1);
       temp_string = String(value);
       message = temp_string + " C*";
-      lcd.print(message);
+      lcd.print(bmp.readTemperature());
+      Serial.println(message);
       break;
     case 2:
+      Serial.println("switch 2");
       bmp_pressure = bmp.readPressure();
+      Serial.println("bmp 2");
       lcd.setCursor(1,0);
       lcd.print("Légnyomás: ");
       lcd.setCursor(3,1);
@@ -131,7 +160,6 @@ void loop() {
       lcd.print(message);
       break;
     case 6:
-      delay(2000);
       dht_value = dht.readHumidity();
       lcd.setCursor(1,0);
       lcd.print("Páratartalom: ");
