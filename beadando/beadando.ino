@@ -64,8 +64,6 @@ pinMode(rotary_clk, INPUT);
 pinMode(rotary_sw, INPUT_PULLUP);
 pinMode(lcd0, OUTPUT);
 pinMode(lcd1, OUTPUT);
-//pinMode(barometerscl, INPUT);
-//pinMode(barometersda, INPUT);
 pinMode(speaker, OUTPUT);
 //pinMode(waterlsensor, INPUT);
 pinMode(ldr, INPUT);
@@ -113,6 +111,7 @@ void loop() {
       dht_value = dht.readTemperature();
       Serial.println("bmp-k után");
       value = (dht_value + dht_value)/2;
+      lcd.clear();
       lcd.setCursor(1,0);
       lcd.print("Hőmérséklet: ");
       lcd.setCursor(3,1);
@@ -125,6 +124,7 @@ void loop() {
       Serial.println("switch 2");
       bmp_pressure = bmp.readPressure();
       Serial.println("bmp 2");
+      lcd.clear();
       lcd.setCursor(1,0);
       lcd.print("Légnyomás: ");
       lcd.setCursor(3,1);
@@ -134,6 +134,7 @@ void loop() {
       break;
     case 3:
       bmp_altitude = bmp.readAltitude();
+      lcd.clear();
       lcd.setCursor(1,0);
       lcd.print("Magasság: ");
       lcd.setCursor(3,1);
@@ -143,6 +144,7 @@ void loop() {
       break;
     case 4:
       water_value = analogRead(waterlsensor);
+      lcd.clear();
       lcd.setCursor(1,0);
       lcd.print("Vizszint magasság: ");
       lcd.setCursor(3,1);
@@ -152,6 +154,7 @@ void loop() {
       break;
     case 5:
       ldr_light = analogRead(ldr);
+      lcd.clear();
       lcd.setCursor(1,0);
       lcd.print("Fény mennyisége: ");
       lcd.setCursor(3,1);
@@ -161,6 +164,7 @@ void loop() {
       break;
     case 6:
       dht_value = dht.readHumidity();
+      lcd.clear();
       lcd.setCursor(1,0);
       lcd.print("Páratartalom: ");
       lcd.setCursor(3,1);
@@ -168,6 +172,9 @@ void loop() {
       message = temp_string + " %";
       lcd.print(message);
       break;
+    default:
+    i = 1;
+    break;
   }  
   } 
 }
