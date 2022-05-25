@@ -40,16 +40,30 @@ int lastState;
 int buttonPress(){
 int state;
 int button = digitalRead(rotary_sw);
-if(button != lastState){
-if(button == HIGH){
-state = 1;
-}
-else{
-state = 0;
-}
-lastState = button;
-Serial.print(lastState);
-}
+  
+  /*
+  if(button != lastState){
+    if(button == LOW){
+      state = 1;
+    }
+    else{
+      state = 0;
+    }
+    lastState = button;
+  }
+  */
+
+  if(button == LOW){
+    if(lastState == 0){
+      lastState = 1;
+      Serial.println("if");
+      }
+    else if(lastState == 1){
+      lastState = 0;
+      Serial.println("else if");
+      }
+  }
+  
 }
 
 
@@ -65,7 +79,7 @@ pinMode(rotary_sw, INPUT_PULLUP);
 pinMode(lcd0, OUTPUT);
 pinMode(lcd1, OUTPUT);
 pinMode(speaker, OUTPUT);
-//pinMode(waterlsensor, INPUT);
+pinMode(waterlsensor, INPUT);
 pinMode(ldr, INPUT);
 lcd.init();
 lcd.init();
@@ -75,105 +89,101 @@ bmp.begin();
 lastCLK = digitalRead(rotary_clk);
 btn_on = 0;
 i = 1;
-Serial.println("VOID SETUP IS READY");
+lastState = 0;
 }
 
 void loop() {
-  Serial.println("LOOP");
   currentCLK = digitalRead(rotary_clk);
   if(currentCLK != lastCLK && currentCLK == 1){
     if(digitalRead(rotary_dt) != currentCLK){
      i --;
+     Serial.println(i);
     }
     else {
       i ++;
+      Serial.println(i);
     }
     Serial.println(i);
   }
   lastCLK = currentCLK;
-  /*
-  btn_value = digitalRead(rotary_sw);
-  if(btn_value == LOW && btn_on == 0){
-    btn_on = 1;
-    Serial.print(btn_on);
-  }
-  if(btn_value == LOW && btn_on == 1){
-    btn_on = 0;
-    Serial.print(btn_on);
-  }
-  */
   buttonPress();
-  Serial.println("Button Press után");
+  Serial.println(lastState);
+  if(lastState == 0){
+    Serial.println("RED");
+    digitalWrite(g, LOW);
+    digitalWrite(b, LOW);
+    digitalWrite(r, HIGH);
+  }
+  else {
+    analogWrite(g, HIGH);
+    analogWrite(b, LOW);
+    analogWrite(r, LOW);
+  }
   if(lastState == 1){
     switch(i){
     case 1:
-      Serial.println("Switch 1");
       dht_value = dht.readTemperature();
-      Serial.println("bmp-k után");
-      value = (dht_value + dht_value)/2;
-      lcd.clear();
-      lcd.setCursor(1,0);
-      lcd.print("Hőmérséklet: ");
-      lcd.setCursor(3,1);
+      bmp_temp = bmp.readTemperature();
+      value = (dht_value + bmp_temp)/2;
+      lcd.setCursor(0,0);
+      lcd.print("  Temperature:  ");
+      lcd.setCursor(0,1);
       temp_string = String(value);
-      message = temp_string + " C*";
-      lcd.print(bmp.readTemperature());
-      Serial.println(message);
+      message ="  " + temp_string + " Celsius  ";
+      lcd.print(message);
       break;
     case 2:
-      Serial.println("switch 2");
       bmp_pressure = bmp.readPressure();
-      Serial.println("bmp 2");
-      lcd.clear();
-      lcd.setCursor(1,0);
-      lcd.print("Légnyomás: ");
-      lcd.setCursor(3,1);
+      lcd.setCursor(0,0);
+      lcd.print("   Pressure:    ");
+      lcd.setCursor(0,1);
       temp_string = String(bmp_pressure);
-      message = temp_string + " Bar";
+      message = "   " + temp_string + " Bar  ";
       lcd.print(message);
       break;
     case 3:
       bmp_altitude = bmp.readAltitude();
-      lcd.clear();
-      lcd.setCursor(1,0);
-      lcd.print("Magasság: ");
-      lcd.setCursor(3,1);
+      lcd.setCursor(0,0);
+      lcd.print("   Altitude:    ");
+      lcd.setCursor(0,1);
       temp_string = String(bmp_altitude);
-      message = temp_string + " m";
+      message = "     " + temp_string + " m    ";
       lcd.print(message);
       break;
     case 4:
       water_value = analogRead(waterlsensor);
-      lcd.clear();
-      lcd.setCursor(1,0);
-      lcd.print("Vizszint magasság: ");
-      lcd.setCursor(3,1);
+      lcd.setCursor(0,0);
+      lcd.print("  Water Level:  ");
+      lcd.setCursor(0,1);
       temp_string = String(water_value);
-      message = temp_string + " ml";
+      message = "    " + temp_string + " ml      ";
       lcd.print(message);
       break;
     case 5:
       ldr_light = analogRead(ldr);
-      lcd.clear();
-      lcd.setCursor(1,0);
-      lcd.print("Fény mennyisége: ");
-      lcd.setCursor(3,1);
+      lcd.setCursor(0,0);
+      lcd.print("  Birghtness:   ");
+      lcd.setCursor(0,1);
       temp_string = String(ldr_light);
-      message = temp_string + " lumen";
+      message = "   " + temp_string + " lumen   ";
       lcd.print(message);
       break;
     case 6:
       dht_value = dht.readHumidity();
-      lcd.clear();
-      lcd.setCursor(1,0);
-      lcd.print("Páratartalom: ");
-      lcd.setCursor(3,1);
+      lcd.setCursor(0,0);
+      lcd.print("    Humidity:   ");
+      lcd.setCursor(0,1);
       temp_string = String(dht_value);
-      message = temp_string + " %";
+      message = "     " +temp_string + " %    ";
       lcd.print(message);
       break;
     default:
-    i = 1;
+      if(i < 1){
+        i = 6;
+        }
+        else{
+          i = 1;
+          }
     break;
   }  
   } 
