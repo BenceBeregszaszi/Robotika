@@ -38,29 +38,21 @@ String message;
 String temp_string;
 int lastState;
 int buttonPress(){
-int state;
-int button = digitalRead(rotary_sw);
-  
-  /*
-  if(button != lastState){
-    if(button == LOW){
-      state = 1;
-    }
-    else{
-      state = 0;
-    }
-    lastState = button;
-  }
-  */
-
+  int state;
+  int button = digitalRead(rotary_sw);
   if(button == LOW){
     if(lastState == 0){
       lastState = 1;
-      Serial.println("if");
+      tone(speaker, 3000);
+      delay(500);
+      noTone(speaker);
       }
     else if(lastState == 1){
       lastState = 0;
-      Serial.println("else if");
+      tone(speaker, 2000);
+      delay(500);
+      noTone(speaker);
+      lcd.clear();
       }
   }
   
@@ -97,27 +89,20 @@ void loop() {
   if(currentCLK != lastCLK && currentCLK == 1){
     if(digitalRead(rotary_dt) != currentCLK){
      i --;
-     Serial.println(i);
     }
     else {
       i ++;
-      Serial.println(i);
     }
-    Serial.println(i);
   }
   lastCLK = currentCLK;
   buttonPress();
-  Serial.println(lastState);
   if(lastState == 0){
-    Serial.println("RED");
-    digitalWrite(g, LOW);
-    digitalWrite(b, LOW);
-    digitalWrite(r, HIGH);
+    digitalWrite(g, HIGH);
+    analogWrite(r, 0);
   }
   else {
-    analogWrite(g, HIGH);
-    analogWrite(b, LOW);
-    analogWrite(r, LOW);
+    digitalWrite(g, LOW);
+    analogWrite(r, 255);
   }
   if(lastState == 1){
     switch(i){
@@ -153,10 +138,18 @@ void loop() {
     case 4:
       water_value = analogRead(waterlsensor);
       lcd.setCursor(0,0);
-      lcd.print("  Water Level:  ");
+      lcd.print("      Rain:     ");
       lcd.setCursor(0,1);
-      temp_string = String(water_value);
-      message = "    " + temp_string + " ml      ";
+      if(water_value > 800){
+        lcd.print("      Dry       ");
+      }else if(water_value > 500 && water_value < 800){
+        lcd.print("  Intermediate  ");
+      }
+      else{
+        lcd.print("      Rain      ");
+      }
+      Serial.println(water_value);
+      message = "    " + temp_string + " mm      ";
       lcd.print(message);
       break;
     case 5:
