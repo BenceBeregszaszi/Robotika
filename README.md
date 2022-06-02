@@ -8,23 +8,32 @@
 - Erdélyi Roland
 ------------------------------
 
-## Áttekintés
+## Használt eszközök:
 
-## Jelenlegi helyzet
+-Arduino Micro
+-KY-015
+-Eső szenzor FC-37
+-lehúzó ellenálás 10KΩ
+-Hangszóró
+-RGB Led
+-BMP180 Barometer
+-16x2 LCD I2C
+-KY-040 Rotary Encoder
 
-A megrendelőn egy olyan multifunkcionális eszközt szeretne amivel egyszerűen tud mérni különböző adatokat az időjárásról.
+------------------------------
+## Általános leírás
 
-## Követelménylista
+Időjárás figyelő eszköz. Hőmérsékletet, magasságot, légnyomást, páratartalmat, eső figyelés, fénymennyiséget figyel.
 
-## Jelenlegi üzleti folyamatok modellje
-
-## Igényelt üzleti folyamatok modellje
+------------------------------
 
 ## Használati esetek
 
  - Rotary Encoder:
    - Gomb megnyomásával mérnek a szenzorok
-   - Tekerésévle különböző mérések kiírása a kijelzőre
+   - gomb megnyomására az RGB LED pirosról Zöldre vált
+   - a gomb megnyomására a hangszóró hangot ad ki, ki-be kapcsolás esetére.
+   - Tekerésével különböző mérések kiírása a kijelzőre
 
  - Kijelző: Rotary Encoder tekerésének hatására => Mérési adatok megjelenítése
    - Az adott szenzorról olvasott értékek megjelítése
@@ -41,13 +50,9 @@ A megrendelőn egy olyan multifunkcionális eszközt szeretne amivel egyszerűen
  - Fény szenzor: Rotary Encoder tekerésének hatására => Mérési adatok megjelenítése
    - Megméri a fény mennyiségét
 
- - Hangszóró: Rotary Encoder tekerésének hatására => Mérési adatok megjelenítése
-   - Ha a mért értékek magasak akkor sípoló hangot ad ki
-
  - Led:
-   - Zöld: Ha a mérések megfelelőek akkor Zöld fény villog
-   - Sárga: Ha a mérési eredmények kicsivel rosszabbak mint a megfelelőek akkor sárgán villog
-   - Piros: Ha a mérési eredmények rosszak akkor piros fény villog
+   - Zöld: Ha az eszköz bekapcsolt állapotban van
+   - Piros: Ha az eszköz kikapcsolt állapotban van
 
 ## Állapot átmenet gráf
 
