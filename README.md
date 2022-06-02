@@ -10,15 +10,15 @@
 
 ## Használt eszközök:
 
--Arduino Micro
--KY-015
--Eső szenzor FC-37
--lehúzó ellenálás 10KΩ
--Hangszóró
--RGB Led
--BMP180 Barometer
--16x2 LCD I2C
--KY-040 Rotary Encoder
+- Arduino Micro
+- KY-015
+- Eső szenzor FC-37
+- lehúzó ellenálás 10KΩ
+- Hangszóró
+- RGB Led
+- BMP180 Barometer
+- 16x2 LCD I2C
+- KY-040 Rotary Encoder
 
 ------------------------------
 ## Általános leírás
