@@ -56,7 +56,7 @@ Időjárás figyelő eszköz. Hőmérsékletet, magasságot, légnyomást, pára
 
 ## Állapot átmenet gráf
 
-![allapotatmenet](https://imgur.com/jO8MS90.png)
+![allapotatmenet](https://imgur.com/X3roYFm.png)
 
 
 ## Terv
